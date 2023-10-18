@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <time.h>
+#include <string.h>
 
 typedef struct Node {
     int inf;
@@ -50,7 +51,7 @@ void crossSp(Node** arr_sp, int rows1, int* arr_visited) {
     Node* current = arr_sp[rows1];
     while (current != NULL) {
         int temp = current->inf;
-        if (!arr_visited[temp]) {
+        if (!arr_visited[--temp]) {
             crossSp(arr_sp, temp, arr_visited);
         }
         current = current->next;
@@ -159,9 +160,10 @@ void main() {
             printSp(arr_sp, rows);
             break;
         case 2:
-            for (i = 0; i < rows; i++) {
-                arr_visited[i] = 0;
-            }
+            arr_visited = (int*)malloc(rows * sizeof(int));
+			for (i = 0; i < rows; i++) {
+				arr_visited[i] = 0;  // Инициализируем все вершины как непосещенные
+			}
             printf("Введите вершину с которой хотите начать обход: ");
             scanf("%d", &rows1);
             if (rows1 < 1 || rows1 > rows) {
@@ -171,8 +173,10 @@ void main() {
             printf("Результат обхода графа в глубину: ");
             cross(arr, rows1 - 1, arr_visited, rows);
             printf("\n");
+			free(arr_visited);
             break;
         case 3:   
+			arr_visited = (int*)malloc(rows * sizeof(int));
             for (i = 0; i < rows; i++) {
                arr_visited[i] = 0;
             }
@@ -183,10 +187,13 @@ void main() {
                 break;
             }
             printf("Результат обхода графа в глубину: ");
+			memset(arr_visited, 0, sizeof(int) * rows);
             crossSp(arr_sp, rows1 - 1, arr_visited);
             printf("\n");
+			free(arr_visited);
             break;
         case 4:
+			arr_visited = (int*)malloc(rows * sizeof(int));
             for (i = 0; i < rows; i++) {
                 arr_visited[i] = 0;
             }
@@ -199,6 +206,7 @@ void main() {
             printf("Результат обхода графа в глубину: ");
             crossStack(arr, arr_visited, rows1 - 1, rows);
             printf("\n");
+			free(arr_visited);
             break;
         case 5:
             system("cls");
